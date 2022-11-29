@@ -13,5 +13,6 @@ module.exports = {
   rules: {
     'global-require': 'off',
     'import/no-dynamic-require': 'off',
+    'no-unused-vars': 'off',
   },
 };
