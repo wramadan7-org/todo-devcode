@@ -8,9 +8,10 @@ const {
   MYSQL_USER,
   MYSQL_PASSWORD,
   MYSQL_DBNAME,
+  NODE_ENV,
 } = process.env;
 
-const sequelize = new Sequelize(`${MYSQL_DBDIALECT}://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DBNAME}`);
+const sequelize = new Sequelize(`${MYSQL_DBDIALECT}://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DBNAME}_${NODE_ENV}`);
 const SequelizeInstance = sequelize.Sequelize;
 
 // const connectDb = () => {
