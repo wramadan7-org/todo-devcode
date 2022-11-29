@@ -1,12 +1,12 @@
-import express from 'express';
-import helmet from 'helmet';
-import xss from 'xss-clean';
-import cors from 'cors';
-import compression from 'compression';
-import * as dotenv from 'dotenv';
-import httpStatus from 'http-status';
+require('dotenv').config();
 
-dotenv.config();
+const express = require('express');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const cors = require('cors');
+const compression = require('compression');
+const httpStatus = require('http-status');
+const connection = require('./config/database');
 
 const app = express();
 
@@ -39,6 +39,10 @@ app.response.sendWrapped = function (message, data, statusCode = httpStatus.OK) 
   });
 };
 
-app.listen(NODE_PORT, () => {
-  console.log(`App listen on port ${NODE_PORT}`);
-});
+connection.connectDb.then(() => {
+  app.listen(NODE_PORT, () => {
+    console.log(`App listen on port ${NODE_PORT}`);
+  });
+}).catch((error) => console.log(error));
+
+module.exports = app;
