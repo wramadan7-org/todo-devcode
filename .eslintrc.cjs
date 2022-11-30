@@ -14,5 +14,6 @@ module.exports = {
     'global-require': 'off',
     'import/no-dynamic-require': 'off',
     'no-unused-vars': 'off',
+    'func-names': 'off',
   },
 };
