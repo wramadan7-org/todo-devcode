@@ -8,6 +8,7 @@ const compression = require('compression');
 const httpStatus = require('http-status');
 const connection = require('./config/database');
 const routes = require('./routes/index');
+const setupSequelizeAssosiation = require('./models');
 
 const app = express();
 
@@ -42,10 +43,23 @@ app.response.sendWrapped = function (message, data, statusCode = httpStatus.OK) 
 
 app.use(routes);
 
-connection.connectDb.then(() => {
-  app.listen(NODE_PORT, () => {
-    console.log(`App listen on port ${NODE_PORT}`);
-  });
-}).catch((error) => console.log(error));
+const initializeServer = () => {
+  connection.connectDb.then(() => {
+    setupSequelizeAssosiation().then(() => {
+      app.listen(NODE_PORT, () => {
+        console.log(`App listen on port ${NODE_PORT}`);
+      });
+    });
+  }).catch((error) => console.log(error));
+};
+
+initializeServer();
+
+// connection.connectDb.then(() => {
+
+//   app.listen(NODE_PORT, () => {
+//     console.log(`App listen on port ${NODE_PORT}`);
+//   });
+// }).catch((error) => console.log(error));
 
 module.exports = app;
