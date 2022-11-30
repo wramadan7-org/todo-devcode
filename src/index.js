@@ -7,6 +7,7 @@ const cors = require('cors');
 const compression = require('compression');
 const httpStatus = require('http-status');
 const connection = require('./config/database');
+const routes = require('./routes/index');
 
 const app = express();
 
@@ -38,6 +39,8 @@ app.response.sendWrapped = function (message, data, statusCode = httpStatus.OK) 
     data,
   });
 };
+
+app.use(routes);
 
 connection.connectDb.then(() => {
   app.listen(NODE_PORT, () => {
