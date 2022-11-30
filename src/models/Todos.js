@@ -28,6 +28,11 @@ const Todos = sequelize.define('todos', {
     defaultValue: true,
     allowNull: false,
   },
+  priority: {
+    type: DataTypes.ENUM('very-high', 'high', 'medium', 'low', 'very-low'),
+    defaultValue: 'very-high',
+    allowNull: false,
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
