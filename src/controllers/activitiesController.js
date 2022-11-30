@@ -58,8 +58,37 @@ const getOneActivities = async (req, res) => {
   }
 };
 
+const updatePatchActivities = async (req, res) => {
+  const { idActivities } = req.params;
+  const requestBody = req.body;
+
+  try {
+    const activities = await Activities.findByPk(idActivities);
+
+    if (!activities) return res.sendWrapped('Not Foind', {}, httpStatus.NOT_FOUND);
+
+    const update = await Activities.update(requestBody, {
+      where: {
+        id: idActivities,
+      },
+    });
+
+    if (update[0] === 0) return res.sendWrapped('Fail to update', {}, httpStatus.CONFLICT);
+
+    const afterUpdate = await Activities.findByPk(idActivities);
+
+    const response = dataActivities(afterUpdate);
+
+    res.sendWrapped('Success', response, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: error });
+  }
+};
+
 module.exports = {
   createActivities,
   getAllActivities,
   getOneActivities,
+  updatePatchActivities,
 };
