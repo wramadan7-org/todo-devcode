@@ -42,7 +42,24 @@ const getAllActivities = async (req, res) => {
   }
 };
 
+const getOneActivities = async (req, res) => {
+  const { idActivities } = req.params;
+  try {
+    const activities = await Activities.findByPk(idActivities);
+
+    if (!activities) return res.sendWrapped('Not Found', {}, httpStatus.NOT_FOUND);
+
+    const response = dataActivities(activities);
+
+    res.sendWrapped('Success', response, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: error });
+  }
+};
+
 module.exports = {
   createActivities,
   getAllActivities,
+  getOneActivities,
 };
