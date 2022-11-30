@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
-const { Activities } = require('../models/Activities');
 const { dataActivities } = require('../helpers/customResponse');
+const { Activities } = require('../models/Activities');
 
 const createActivities = async (req, res) => {
   try {
