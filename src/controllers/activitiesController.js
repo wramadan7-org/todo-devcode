@@ -86,9 +86,31 @@ const updatePatchActivities = async (req, res) => {
   }
 };
 
+const deleteActivies = async (req, res) => {
+  const { idActivities } = req.params;
+
+  try {
+    const activities = await Activities.findByPk(idActivities);
+
+    if (!activities) return res.sendWrapped(`Activity with ID ${idActivities} Not Found`, {}, httpStatus.NOT_FOUND);
+
+    await Activities.destroy({
+      where: {
+        id: idActivities,
+      },
+    });
+
+    res.sendWrapped('Success', {}, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ satus: 500, message: error });
+  }
+};
+
 module.exports = {
   createActivities,
   getAllActivities,
   getOneActivities,
   updatePatchActivities,
+  deleteActivies,
 };
