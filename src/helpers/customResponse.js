@@ -3,6 +3,7 @@ const dataActivities = (dataParam) => {
     id: dataParam.dataValues.id,
     email: dataParam.dataValues.email,
     title: dataParam.dataValues.title,
+    // todos: dataParam.dataValues.todos,
     created_at: dataParam.dataValues.createdAt,
     updated_at: dataParam.dataValues.updatedAt,
     deleted_at: dataParam.dataValues.deletedAt,
@@ -15,6 +16,7 @@ const dataTodos = (dataParam) => {
   const data = {
     id: dataParam.dataValues.id,
     activity_group_id: dataParam.dataValues.activityGroupId,
+    // activity: dataParam.dataValues.activity,
     title: dataParam.dataValues.title,
     is_active: dataParam.dataValues.isActive,
     priority: dataParam.dataValues.priority,
