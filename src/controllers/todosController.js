@@ -66,7 +66,29 @@ const getAllTodos = async (req, res) => {
   }
 };
 
+const getOneTodos = async (req, res) => {
+  const { idTodo } = req.params;
+
+  try {
+    const todo = await Todos.findOne({
+      where: {
+        id: idTodo,
+      },
+    });
+
+    if (!todo) return res.sendWrapped(`Todo with ID ${idTodo} Not Found`, {}, httpStatus.NOT_FOUND);
+
+    const response = dataTodos(todo);
+
+    res.sendWrapped('Success', response, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: error });
+  }
+};
+
 module.exports = {
   createTodos,
   getAllTodos,
+  getOneTodos,
 };
