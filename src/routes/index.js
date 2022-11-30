@@ -1,12 +1,17 @@
 const { Router } = require('express');
-const activities = require('./activitiesRoute');
+const activitiesRoute = require('./activitiesRoute');
+const todoesRoute = require('./todosRoute');
 
 const router = Router();
 
 const defaultRoutes = [
   {
     path: '/activity-groups',
-    route: activities,
+    route: activitiesRoute,
+  },
+  {
+    path: '/todo-items',
+    route: todoesRoute,
   },
 ];
 
