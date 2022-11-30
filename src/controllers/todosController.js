@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const { dataTodos } = require('../helpers/customResponse');
 const { Todos } = require('../models/Todos');
 
-const createTodoes = async (req, res) => {
+const createTodos = async (req, res) => {
   const { activity_group_id, title } = req.body;
 
   try {
@@ -27,6 +27,41 @@ const createTodoes = async (req, res) => {
   }
 };
 
+const getAllTodos = async (req, res) => {
+  const { activity_group_id } = req.query;
+
+  try {
+    let todos = [];
+
+    if (activity_group_id) {
+      todos = await Todos.findAll({
+        where: {
+          activityGroupId: activity_group_id,
+        },
+      });
+    } else {
+      todos = await Todos.findAll();
+    }
+
+    if (!todos) return res.sendWrapped('Fail to get all todo', [], httpStatus.CONFLICT);
+    if (todos.length < 0) return res.sendWrapped('Success', [], httpStatus.OK);
+
+    const arrayResponse = [];
+
+    todos.forEach((value) => {
+      const response = dataTodos(value);
+
+      arrayResponse.push(response);
+    });
+
+    res.sendWrapped('Success', arrayResponse, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: error });
+  }
+};
+
 module.exports = {
-  createTodoes,
+  createTodos,
+  getAllTodos,
 };
