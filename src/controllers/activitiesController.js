@@ -6,9 +6,11 @@ const createActivities = async (req, res) => {
   try {
     const { title, email } = req.body;
 
-    if (!title || title.length < 0) throw Error('Title can\'t be empty');
+    if (!title) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
 
-    const created = await Activities.create({ title, email });
+    const data = { title, email };
+
+    const created = await Activities.create(data);
 
     const response = dataActivities(created);
 
@@ -23,9 +25,9 @@ const getAllActivities = async (req, res) => {
   try {
     const activities = await Activities.findAll();
 
-    if (!activities) throw new Error('Fail to get all activities.');
+    if (!activities) return res.sendWrapped('Fail to get all activities.', [], httpStatus.CONFLICT);
 
-    if (activities.length < 0) return res.send({ message: 200, data: activities });
+    if (activities.length < 0) return res.sendWrapped('Success', activities, httpStatus.OK);
 
     const arrayResponse = [];
 
