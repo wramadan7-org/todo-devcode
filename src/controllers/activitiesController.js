@@ -65,7 +65,9 @@ const updatePatchActivities = async (req, res) => {
   try {
     const activities = await Activities.findByPk(idActivities);
 
-    if (!activities) return res.sendWrapped('Not Foind', {}, httpStatus.NOT_FOUND);
+    if (!activities) return res.sendWrapped(`Activity with ID ${idActivities} Not Found`, {}, httpStatus.NOT_FOUND);
+
+    if (requestBody && !requestBody.title) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
 
     const update = await Activities.update(requestBody, {
       where: {
