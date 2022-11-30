@@ -47,7 +47,7 @@ const getOneActivities = async (req, res) => {
   try {
     const activities = await Activities.findByPk(idActivities);
 
-    if (!activities) return res.sendWrapped('Not Found', {}, httpStatus.NOT_FOUND);
+    if (!activities) return res.sendWrapped(`Activity with ID ${idActivities} Not Found`, {}, httpStatus.NOT_FOUND);
 
     const response = dataActivities(activities);
 
