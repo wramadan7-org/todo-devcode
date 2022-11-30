@@ -11,7 +11,7 @@ const dataActivities = (dataParam) => {
   return data;
 };
 
-const dataTodoes = (dataParam) => {
+const dataTodos = (dataParam) => {
   const data = {
     id: dataParam.dataValues.id,
     activity_group_id: dataParam.dataValues.activityGroupId,
@@ -26,5 +26,5 @@ const dataTodoes = (dataParam) => {
 
 module.exports = {
   dataActivities,
-  dataTodoes,
+  dataTodos,
 };
