@@ -14,8 +14,8 @@ const Todos = sequelize.define('todos', {
     field: 'activity_group_id',
     allowNull: false,
     references: {
-      model: Activities,
       key: 'id',
+      model: Activities,
     },
   },
   title: {
@@ -55,12 +55,6 @@ const Todos = sequelize.define('todos', {
   timestamps: true,
   paranoid: true,
 });
-
-Todos.associations = (models) => {
-  Todos.belongsTo(models.Activities);
-
-  return Todos;
-};
 
 module.exports = {
   Todos,
