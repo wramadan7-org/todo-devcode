@@ -22,6 +22,8 @@ const dataTodos = (dataParam) => {
     updated_at: dataParam.dataValues.updatedAt,
     deleted_at: dataParam.dataValues.deletedAt,
   };
+
+  return data;
 };
 
 module.exports = {
