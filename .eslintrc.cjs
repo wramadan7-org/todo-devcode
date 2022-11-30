@@ -15,5 +15,6 @@ module.exports = {
     'import/no-dynamic-require': 'off',
     'no-unused-vars': 'off',
     'func-names': 'off',
+    'consistent-return': 'off',
   },
 };
