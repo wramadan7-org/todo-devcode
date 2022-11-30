@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { dataTodos } = require('../helpers/customResponse');
+const { Activities } = require('../models/Activities');
 const { Todos } = require('../models/Todos');
 
 const createTodos = async (req, res) => {
@@ -8,6 +9,10 @@ const createTodos = async (req, res) => {
   try {
     if (!activity_group_id) return res.sendWrapped('activity_group_id cannot be null', {}, httpStatus.BAD_REQUEST);
     if (!title) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
+
+    const checkActivity = await Activities.findByPk(activity_group_id);
+
+    if (!checkActivity) return res.sendWrapped(`Activity with ID ${activity_group_id} Not Found`, {}, httpStatus.BAD_REQUEST);
 
     const data = {
       activityGroupId: activity_group_id,
