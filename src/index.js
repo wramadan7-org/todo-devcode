@@ -34,7 +34,7 @@ app.options('*', cors());
 
 app.response.sendWrapped = function (message, data, statusCode = httpStatus.OK) {
   return this.status(statusCode).send({
-    status: statusCode === httpStatus.OK || statusCode === httpStatus.CREATED ? 'Success' : statusCode,
+    status: statusCode === httpStatus.OK || statusCode === httpStatus.CREATED ? 'Success' : httpStatus[statusCode],
     message,
     data,
   });
