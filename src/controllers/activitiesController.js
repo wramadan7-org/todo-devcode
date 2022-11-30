@@ -6,7 +6,7 @@ const createActivities = async (req, res) => {
   try {
     const { title, email } = req.body;
 
-    if (!title) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
+    if (!title || (title || title.length === 0)) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
 
     const data = { title, email };
 
@@ -69,7 +69,7 @@ const updatePatchActivities = async (req, res) => {
 
     if (!activities) return res.sendWrapped(`Activity with ID ${idActivities} Not Found`, {}, httpStatus.NOT_FOUND);
 
-    if (requestBody && !requestBody.title) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
+    if (!requestBody.title || requestBody.title.length === 0) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
 
     const update = await Activities.update(requestBody, {
       where: {
