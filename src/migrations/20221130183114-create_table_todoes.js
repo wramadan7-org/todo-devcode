@@ -22,6 +22,7 @@ module.exports = {
         isActive: {
           type: Sequelize.BOOLEAN,
           field: 'is_active',
+          defaultValue: true,
           allowNull: false,
         },
         priority: {
