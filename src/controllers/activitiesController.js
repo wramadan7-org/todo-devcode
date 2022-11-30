@@ -77,8 +77,6 @@ const updatePatchActivities = async (req, res) => {
       },
     });
 
-    if (update[0] === 0) return res.sendWrapped('Fail to update', {}, httpStatus.CONFLICT);
-
     const afterUpdate = await Activities.findByPk(idActivities);
 
     const response = dataActivities(afterUpdate);
