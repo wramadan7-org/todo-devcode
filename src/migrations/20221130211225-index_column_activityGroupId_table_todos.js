@@ -5,6 +5,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeIndex('todos', 'activit_gGrou_iId');
+    await queryInterface.removeIndex('todos', ['activity_group_id']);
   },
 };
