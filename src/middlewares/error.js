@@ -10,7 +10,7 @@ const errorConverter = (err, req, res, next) => {
   if (!(error instanceof ApiError)) {
     const statusCode = error.statusCode ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR;
     const message = error.message || httpStatus[statusCode];
-    console.log('blablabalbla', error);
+
     error = new ApiError(message, statusCode, false, err.stack);
   }
   next(error);
@@ -19,16 +19,12 @@ const errorConverter = (err, req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
 
-  console.log('error handler', message);
-
   if (NODE_ENV === 'production' && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
   }
 
   res.locals.errorMessage = err.message;
-
-  console.log('res locals', res.locals.errorMessage);
 
   const response = {
     status: statusCode,
@@ -37,7 +33,7 @@ const errorHandler = (err, req, res, next) => {
   };
 
   if (NODE_ENV === 'development') {
-    console.error('errorrrrrrrrrrrrr', err);
+    console.error(err);
   }
 
   res.sendWrapped(response.message, response, statusCode);
