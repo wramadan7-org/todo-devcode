@@ -97,14 +97,26 @@ const updatePatchTodos = async (req, res) => {
     VERYHIGH, HIGH, MEDIUM, LOW, VERYLOW,
   } = priority;
 
+  let isActive;
+
   try {
     const todo = await Todos.findByPk(idTodo);
 
     if (!todo) return res.sendWrapped(`Todo with ID ${idTodo} Not Found`, {}, httpStatus.NOT_FOUND);
 
     if (requestBody.title?.length === 0) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
-    if (requestBody.is_active && typeof requestBody?.is_active !== 'boolean') return res.sendWrapped('is_active only contain boolean', {}, httpStatus.BAD_REQUEST);
-    if (requestBody.priority?.length === 0 && (requestBody.priority !== VERYHIGH || requestBody.priority !== HIGH || requestBody.priority !== MEDIUM || requestBody.priority !== LOW || requestBody.priority !== VERYLOW)) return res.sendWrapped(`priority is only contain ${VERYHIGH}, ${HIGH}, ${MEDIUM}, ${LOW}, ${VERYLOW}`);
+    if (requestBody?.is_active && typeof requestBody?.is_active !== 'boolean') return res.sendWrapped('is_active only contain boolean', {}, httpStatus.BAD_REQUEST);
+    if ((requestBody?.priority || requestBody.priority?.length === 0) && (requestBody.priority !== VERYHIGH && requestBody.priority !== HIGH && requestBody.priority !== MEDIUM && requestBody.priority !== LOW && requestBody.priority !== VERYLOW)) return res.sendWrapped(`priority is only contain ${VERYHIGH}, ${HIGH}, ${MEDIUM}, ${LOW}, ${VERYLOW}`, {}, httpStatus.BAD_REQUEST);
+
+    const getKey = Object.keys(requestBody);
+
+    const checkKey = getKey.some((value) => value === 'is_active');
+
+    if (checkKey) {
+      isActive = requestBody.is_active;
+
+      delete Object.assign(requestBody, { isActive }).is_active;
+    }
 
     const update = await Todos.update(requestBody, {
       where: {
