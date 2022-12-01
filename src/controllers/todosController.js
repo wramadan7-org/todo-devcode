@@ -1,4 +1,7 @@
 const httpStatus = require('http-status');
+const {
+  priority,
+} = require('../constants/todosConstant');
 const { dataTodos } = require('../helpers/customResponse');
 const { Activities } = require('../models/Activities');
 const { Todos } = require('../models/Todos');
@@ -8,7 +11,7 @@ const createTodos = async (req, res) => {
 
   try {
     if (!activity_group_id) return res.sendWrapped('activity_group_id cannot be null', {}, httpStatus.BAD_REQUEST);
-    if (!title) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
+    if (!title || title.length === 0) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
 
     const checkActivity = await Activities.findByPk(activity_group_id);
 
@@ -87,8 +90,42 @@ const getOneTodos = async (req, res) => {
   }
 };
 
+const updatePatchTodos = async (req, res) => {
+  const { idTodo } = req.params;
+  const requestBody = req.body;
+  const {
+    VERYHIGH, HIGH, MEDIUM, LOW, VERYLOW,
+  } = priority;
+
+  try {
+    const todo = await Todos.findByPk(idTodo);
+
+    if (!todo) return res.sendWrapped(`Todo with ID ${idTodo} Not Found`, {}, httpStatus.NOT_FOUND);
+
+    if (requestBody.title?.length === 0) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
+    if (requestBody.is_active && typeof requestBody?.is_active !== 'boolean') return res.sendWrapped('is_active only contain boolean', {}, httpStatus.BAD_REQUEST);
+    if (requestBody.priority?.length === 0 && (requestBody.priority !== VERYHIGH || requestBody.priority !== HIGH || requestBody.priority !== MEDIUM || requestBody.priority !== LOW || requestBody.priority !== VERYLOW)) return res.sendWrapped(`priority is only contain ${VERYHIGH}, ${HIGH}, ${MEDIUM}, ${LOW}, ${VERYLOW}`);
+
+    const update = await Todos.update(requestBody, {
+      where: {
+        id: idTodo,
+      },
+    });
+
+    const afterUpdate = await Todos.findByPk(idTodo);
+
+    const response = dataTodos(afterUpdate);
+
+    res.sendWrapped('Success', response, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: error });
+  }
+};
+
 module.exports = {
   createTodos,
   getAllTodos,
   getOneTodos,
+  updatePatchTodos,
 };
