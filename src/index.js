@@ -9,10 +9,12 @@ const httpStatus = require('http-status');
 const connection = require('./config/database');
 const routes = require('./routes/index');
 const setupSequelizeAssosiation = require('./models');
+const { errorConverter, errorHandler } = require('./middlewares/error');
 
 const app = express();
 
 const { NODE_PORT } = process.env;
+let server;
 
 // Set security headers
 app.use(helmet());
@@ -33,6 +35,7 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+// Wrapped response
 app.response.sendWrapped = function (message, data, statusCode = httpStatus.OK) {
   return this.status(statusCode).send({
     status: statusCode === httpStatus.OK || statusCode === httpStatus.CREATED ? 'Success' : httpStatus[statusCode],
@@ -41,25 +44,50 @@ app.response.sendWrapped = function (message, data, statusCode = httpStatus.OK) 
   });
 };
 
+// Use route
 app.use(routes);
 
+// Convert error to ApiError, if needed
+app.use(errorConverter);
+
+// Handle error
+app.use(errorHandler);
+
+const exitHandler = () => {
+  if (server) {
+    server.close(() => {
+      console.log('Server closed');
+    });
+  } else {
+    process.exit(1);
+  }
+};
+
+const unexpectedErrorHandler = (error) => {
+  console.log(error);
+};
+
+// Connect db and assosiation
 const initializeServer = () => {
   connection.connectDb.then(() => {
     setupSequelizeAssosiation().then(() => {
-      app.listen(NODE_PORT, () => {
+      server = app.listen(NODE_PORT, () => {
         console.log(`App listen on port ${NODE_PORT}`);
       });
     });
   }).catch((error) => console.log(error));
 };
 
+// Run function connect db and assosiation
 initializeServer();
 
-// connection.connectDb.then(() => {
+process.on('uncaughtException', unexpectedErrorHandler);
+process.on('unhandledRejection', unexpectedErrorHandler);
 
-//   app.listen(NODE_PORT, () => {
-//     console.log(`App listen on port ${NODE_PORT}`);
-//   });
-// }).catch((error) => console.log(error));
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received');
+
+  if (server) server.close();
+});
 
 module.exports = app;
