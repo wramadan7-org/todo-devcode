@@ -18,5 +18,6 @@ module.exports = {
     'consistent-return': 'off',
     camelcase: 'off',
     'no-plusplus': 'off',
+    'prefer-const': 'off',
   },
 };
