@@ -123,9 +123,31 @@ const updatePatchTodos = async (req, res) => {
   }
 };
 
+const deleteTodos = async (req, res) => {
+  const { idTodo } = req.params;
+
+  try {
+    const todo = await Todos.findByPk(idTodo);
+
+    if (!todo) return res.sendWrapped(`Todo with ID ${idTodo} Not Found`, {}, httpStatus.NOT_FOUND);
+
+    await Todos.destroy({
+      where: {
+        id: idTodo,
+      },
+    });
+
+    res.sendWrapped('Success', {}, httpStatus.OK);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: 500, message: error });
+  }
+};
+
 module.exports = {
   createTodos,
   getAllTodos,
   getOneTodos,
   updatePatchTodos,
+  deleteTodos,
 };
