@@ -17,5 +17,6 @@ module.exports = {
     'func-names': 'off',
     'consistent-return': 'off',
     camelcase: 'off',
+    'no-plusplus': 'off',
   },
 };
