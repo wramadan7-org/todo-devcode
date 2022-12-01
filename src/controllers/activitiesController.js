@@ -1,10 +1,16 @@
 const httpStatus = require('http-status');
 const { dataActivities } = require('../helpers/customResponse');
 const catchAsync = require('../helpers/catchAsync');
+const { generateRandomString } = require('../helpers/randomString');
 const { Activities } = require('../models/Activities');
 
 const createActivities = catchAsync(async (req, res) => {
-  const { title, email } = req.body;
+  let { title, email } = req.body;
+
+  if (!email || email.length === 0) {
+    const random = generateRandomString(7);
+    email = `${random}@gmail.com`;
+  }
 
   if (!title || title.length === 0) return res.sendWrapped('title cannot be null', {}, httpStatus.BAD_REQUEST);
 
