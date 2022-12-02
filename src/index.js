@@ -71,7 +71,7 @@ const unexpectedErrorHandler = (error) => {
 const initializeServer = () => {
   connection.connectDb.then(() => {
     setupSequelizeAssosiation().then(() => {
-      server = app.listen(NODE_PORT, () => {
+      server = app.listen(NODE_PORT, '0.0.0.0', () => {
         console.log(`App listen on port ${NODE_PORT}`);
       });
     });
